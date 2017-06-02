@@ -35,7 +35,7 @@ def clusteringAlgo(out_dir,ext_model,coef):
 			if tgt==reg: continue
 			output_stream.write(reg+' '+tgt+'\n')
 	output_stream.close()
-	print('mcl '+abc_model.replace(' ','\ ')+' --abc -I '+str(coef)+' -V all -o '+cluster_file.replace(' ','\ '))
+	# print('mcl '+abc_model.replace(' ','\ ')+' --abc -I '+str(coef)+' -V all -o '+cluster_file.replace(' ','\ '))
 	os.system('mcl '+abc_model.replace(' ','\ ')+' --abc -I '+str(coef)+' -V all -o '+cluster_file.replace(' ','\ '))
 
 

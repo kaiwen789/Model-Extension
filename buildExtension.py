@@ -31,8 +31,8 @@ def parseModel(mdl):
 	for rows in ws.iter_rows():
 		if rows[0].value is None or rows[0].value=='Variable name': continue
 		curr = []
-		if rows[1].value is not None: curr += re.findall('[\w]+@[\w]+',rows[1].value)
-		if rows[2].value is not None: curr += re.findall('[\w]+@[\w]+',rows[2].value)
+		if rows[1].value is not None: curr += re.findall('[\w\*\#/;]+@[\w]+',rows[1].value)
+		if rows[2].value is not None: curr += re.findall('[\w\*\#/;]+@[\w]+',rows[2].value)
 		regulators[rows[0].value] = set(curr)
 		names.add(rows[0].value)
 
@@ -77,11 +77,14 @@ def parseExtension(dict_file, base_model, ext_file):
 	ext_edges, ext_info, curr_map = set(), dict(), dict()
 	with open(ext_file) as f:
 		for line in f:
-			if line.startswith('regulator_name'): continue
+			if line.startswith('regulator_name'): continue 
 			line = line.strip()
 			s = re.split(',',line)
+
+			if int(s[15]) < 6: break  # Just for testing!!!
+
 			name1, name2 = getName(dict_file,curr_map,s[0:7]), getName(dict_file,curr_map,s[7:14])
-			pos = '+' if s[-3]=='increases' else '-'
+			pos = '+' if s[14]=='increases' else '-'
 
 			if (name2 in base_model and name1 in base_model[name2]) \
 				or (name1, name2, pos) in ext_info:
@@ -117,7 +120,7 @@ def input_parsing():
 
 	num, orig, curr = 1, args.outPath, args.outPath
 	while os.path.isdir(args.dataPath + curr):
-		curr = orig + " " + str(num)
+		curr = orig + "_" + str(num)
 		num += 1
 	os.makedirs(args.dataPath + curr)
 	args.outPath = curr + '/'
