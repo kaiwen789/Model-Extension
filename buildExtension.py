@@ -116,7 +116,7 @@ def input_parsing():
 	assert os.path.isdir(args.dataPath), "dataPath \"" + args.dataPath + "\" is not a path"
 	assert os.path.exists(args.dataPath+args.dictionary), "dictionary \"" + args.dataPath+args.dictionary + "\" does not exist"
 	assert os.path.exists(args.dataPath+args.model), "model \"" + args.dataPath+args.model + "\" does not exist"
-	assert os.path.exists(args.dataPath+args.extension), "extension \"" + args.dataPath+args.dictionary + "\" does not exist"
+	assert os.path.exists(args.dataPath+args.extension), "extension \"" + args.dataPath+args.extension + "\" does not exist"
 
 	num, orig, curr = 1, args.outPath, args.outPath
 	while os.path.isdir(args.dataPath + curr):
