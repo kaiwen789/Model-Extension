@@ -81,7 +81,7 @@ def parseExtension(dict_file, base_model, ext_file):
 			line = line.strip()
 			s = re.split(',',line)
 
-			if int(s[15]) < 6: break  # Just for testing!!!
+			# if int(s[15]) < 6: break  # Just for testing!!!
 
 			name1, name2 = getName(dict_file,curr_map,s[0:7]), getName(dict_file,curr_map,s[7:14])
 			pos = '+' if s[14]=='increases' else '-'
