@@ -43,6 +43,10 @@ def parseModel(mdl):
 # Get the name of the extension, return a string
 def getName(dict_file, curr_map, info):
 	
+	# Ignore the inputs that contains reserved words
+	if len(re.findall("[()\[\],\{\}\!\+]+",info[0])) != 0:
+		return ""
+
 	query, ID, e_type = info[0], info[2], getType(info[4])
 	if query in curr_map: return curr_map[query]
 	
@@ -85,6 +89,7 @@ def parseExtension(dict_file, base_model, ext_file):
 			# if int(s[15]) < 6: break  # Just for testing!!!
 
 			name1, name2 = getName(dict_file,curr_map,s[0:7]), getName(dict_file,curr_map,s[7:14])
+			if name1=="" or name2=="": continue
 			pos = '+' if s[14]=='increases' else '-'
 
 			if (name2 in base_model and name1 in base_model[name2]) \
