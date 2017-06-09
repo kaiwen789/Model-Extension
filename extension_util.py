@@ -19,7 +19,7 @@ def extend_unit(mdl,edges,ignore,simRun,simLen,outPath):
 
 
 # Read in the model, return a dict indicating the row of each element
-def model_parser(mdl):
+def getRow(mdl):
 	res = dict()
 	wb = openpyxl.load_workbook(mdl)
 	ws = wb.active
@@ -34,7 +34,7 @@ def extend_model(mdl,edges,ext_model):
 	
 	os.system('cp '+mdl+' '+ext_model)
 
-	name_to_row = model_parser(ext_model)
+	name_to_row = getRow(ext_model)
 	curr_row = len(name_to_row)+2
 
 	wb = openpyxl.load_workbook(ext_model)

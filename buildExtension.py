@@ -32,8 +32,8 @@ def parseModel(mdl):
 	for rows in ws.iter_rows():
 		if rows[0].value is None or rows[0].value=='Variable name': continue
 		curr = []
-		if rows[1].value is not None: curr += re.findall('[\.\w\*\#/;]+@[\w]+',rows[1].value)
-		if rows[2].value is not None: curr += re.findall('[\.\w\*\#/;]+@[\w]+',rows[2].value)
+		if rows[1].value is not None: curr += re.findall("[^()\[\],\{\}\!\+]+",rows[1].value)
+		if rows[2].value is not None: curr += re.findall("[^()\[\],\{\}\!\+]+",rows[2].value)
 		regulators[rows[0].value] = set(curr)
 		names.add(rows[0].value)
 
