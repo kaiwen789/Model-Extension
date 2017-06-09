@@ -5,6 +5,7 @@ import copy,sys
 import openpyxl
 from collections import defaultdict
 from markovCluster import runMarkovCluster
+from topXReading import runTopXReading
 
 def getType(ip):
 	# Note that there are plenty of different element types
@@ -31,8 +32,10 @@ def parseModel(mdl):
 	for rows in ws.iter_rows():
 		if rows[0].value is None or rows[0].value=='Variable name': continue
 		curr = []
-		if rows[1].value is not None: curr += re.findall('[\w\*\#/;]+@[\w]+',rows[1].value)
-		if rows[2].value is not None: curr += re.findall('[\w\*\#/;]+@[\w]+',rows[2].value)
+		# if rows[1].value is not None: curr += re.findall('[\w\*\#/;]+@[\w]+',rows[1].value)
+		# if rows[2].value is not None: curr += re.findall('[\w\*\#/;]+@[\w]+',rows[2].value)
+		if rows[1].value is not None: curr += re.split(',',rows[1].value.strip())
+		if rows[2].value is not None: curr += re.findall(',',rows[2].value.strip())
 		regulators[rows[0].value] = set(curr)
 		names.add(rows[0].value)
 
@@ -107,10 +110,12 @@ def input_parsing():
 	parser.add_argument("-i", "--dataPath", help="relative path to the data", default="../data/")
 	parser.add_argument("-o","--outPath", help="output folder for current experiment", default="exp")
 	parser.add_argument("-d","--dictionary", help="name of the dictionary", default="dictionary.xlsx")
-	parser.add_argument("-me","--method", help="method to group extensions", choices=["markovCluster"], default="markovCluster")
+	parser.add_argument("-me","--method", help="method to group extensions", choices=["markovCluster","topXReading"], default="markovCluster")
 	additionalArg = parser.add_argument_group('additional argument for each method')
 	additionalArg.add_argument("--extOnly", help="(markov cluster) use extension only, default as false", action="store_true")
 	additionalArg.add_argument("--markovCoef", help="(markov cluster) coefficient for markov clustering, default as 2", default=2, type=int)
+	additionalArg.add_argument("--topX", help="(top X method) the number X, default as 10", default=10, type=int)
+	additionalArg.add_argument("--maxLayer", help="(top X method) the number of layers to be explored, default as 2", default=2,type=int)
 	args = parser.parse_args()
 
 	assert os.path.isdir(args.dataPath), "dataPath \"" + args.dataPath + "\" is not a path"
@@ -150,6 +155,11 @@ def main():
 		pickle.dump(res, open(grouped_file,'wb'))
 	
 
+	elif args.method == "topXReading":
+
+		res = runTopXReading(ext_info, args.topX, args.maxLayer)
+		print(res)
+		# pickle.dump(res, open(grouped_file,'wb'))
 	
 
 
