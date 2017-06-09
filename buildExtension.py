@@ -32,8 +32,8 @@ def parseModel(mdl):
 	for rows in ws.iter_rows():
 		if rows[0].value is None or rows[0].value=='Variable name': continue
 		curr = []
-		if rows[1].value is not None: curr += re.findall("[^()\[\],\{\}\!\+]+",rows[1].value)
-		if rows[2].value is not None: curr += re.findall("[^()\[\],\{\}\!\+]+",rows[2].value)
+		if rows[1].value is not None: curr += re.findall("[^\(\)\[\],\{\}\!\+]+",rows[1].value)
+		if rows[2].value is not None: curr += re.findall("[^\(\)\[\],\{\}\!\+]+",rows[2].value)
 		regulators[rows[0].value] = set(curr)
 		names.add(rows[0].value)
 
@@ -44,7 +44,7 @@ def parseModel(mdl):
 def getName(dict_file, curr_map, info):
 	
 	# Ignore the inputs that contains reserved words
-	if len(re.findall("[()\[\],\{\}\!\+]+",info[0])) != 0:
+	if len(re.findall("[\(\)\[\],\{\}\!\+]+",info[0])) != 0:
 		return ""
 
 	query, ID, e_type = info[0], info[2], getType(info[4])
