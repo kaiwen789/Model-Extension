@@ -44,7 +44,7 @@ def parseModel(mdl):
 def getName(dict_file, curr_map, info):
 	
 	# Ignore the inputs that contains reserved words
-	if len(re.findall("[\(\)\[\],\{\}\!\+]+",info[0])) != 0:
+	if info[0]=="" or len(re.findall("[\(\)\[\],\{\}\!\+]+",info[0])) != 0:
 		return ""
 
 	query, ID, e_type = info[0], info[2], getType(info[4])
