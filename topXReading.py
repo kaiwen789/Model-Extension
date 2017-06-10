@@ -18,27 +18,27 @@ def runTopXReading(ext_info, topX, max_layer):
 	while not my_q.empty():
 		layer, ext = my_q.get()
 		if layer >= max_layer: break
-		print(ext, ext_to_num[ext])
+		# print(ext, ext_to_num[ext])
 		for num in ext_to_num[ext]:
-			print(num, num_to_ext[num])
+			# print(num, num_to_ext[num])
 			for e in num_to_ext[num]:
 				if e in visited: continue
 				my_q.put((layer+1, e))
 				visited.add(e)
 
-	res = [0]
+	res = [1]
 	for ext in visited:
 		res.append(list(ext))
 
-	return res
+	return [res]
 
 
 def getAll(ext_info):
 
-	res = [0]
+	res = [1]
 	for ext in ext_info:
 		res.append(list(ext))
-	return res
+	return [res]
 
 def getNumExt(ext_info):
 

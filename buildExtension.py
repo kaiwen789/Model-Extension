@@ -6,6 +6,7 @@ import openpyxl
 from collections import defaultdict
 from markovCluster import runMarkovCluster
 from topXReading import runTopXReading
+from readingCluster import runReadingCluster
 
 def getType(ip):
 	# Note that there are plenty of different element types
@@ -113,10 +114,10 @@ def input_parsing():
 	parser.add_argument("-i", "--dataPath", help="relative path to the data", default="../data/")
 	parser.add_argument("-o","--outPath", help="output folder for current experiment", default="exp")
 	parser.add_argument("-d","--dictionary", help="name of the dictionary", default="dictionary.xlsx")
-	parser.add_argument("-me","--method", help="method to group extensions", choices=["markovCluster","topXReading"], default="markovCluster")
+	parser.add_argument("-me","--method", help="method to group extensions", choices=["markovCluster","readingCluster","topXReading"], default="markovCluster")
 	additionalArg = parser.add_argument_group('additional argument for each method')
 	additionalArg.add_argument("--extOnly", help="(markov cluster) use extension only, default as false", action="store_true")
-	additionalArg.add_argument("--markovCoef", help="(markov cluster) coefficient for markov clustering, default as 2", default=2, type=int)
+	additionalArg.add_argument("--markovCoef", help="(markov/reading cluster) coefficient for markov clustering, default as 2", default=2, type=int)
 	additionalArg.add_argument("--topX", help="(top X method) the number X, default as 10", default=10, type=int)
 	additionalArg.add_argument("--maxLayer", help="(top X method) the number of layers to be explored, default as 2", default=2,type=int)
 	args = parser.parse_args()
@@ -161,9 +162,12 @@ def main():
 	elif args.method == "topXReading":
 
 		res = runTopXReading(ext_info, args.topX, args.maxLayer)
-		print(res)
-		# pickle.dump(res, open(grouped_file,'wb'))
+		pickle.dump(res, open(grouped_file,'wb'))
 	
+
+	elif args.method == "readingCluster":
+
+		res = runReadingCluster()
 
 
 if __name__=='__main__':
