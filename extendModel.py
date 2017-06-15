@@ -16,6 +16,7 @@ def input_parsing():
 	parser.add_argument("-eg","--extensionGroup",help="extension groups produced by buildExtension.py, default as \'grouped_ext\' (under dataPath)", default="grouped_ext")
 	parser.add_argument("-me","--method", help="method to do model extension", choices=["endValueLoop","checkerLoop","simple"], default="endValueLoop")
 	parser.add_argument("-l","--logFile", help="output folder for current experiment", default="logFile")
+	parser.add_argument("-t","--topCluster", help="use only the top few clusters", default=0, type=int)
 	additionalArg = parser.add_argument_group('additional argument for each method')
 	additionalArg.add_argument("--simRun", help="(endValueLoop/checkerLoop) number of simulation experiment, default as 100", default=100, type=int)
 	additionalArg.add_argument("--simLen", help="(endValueLoop/checkerLoop) step of simulation, default as 10000", default=10000, type=int)
@@ -39,6 +40,7 @@ def main():
 	print(outPath)
 	init_model = args.dataPath + args.model
 	extensions = pickle.load(open(args.dataPath+args.experiment+args.extensionGroup,'rb'))
+	if args.topCluster > 0: extensions = extensions[:min(args.topCluster,len(extensions))]
 	logf = open(args.dataPath + args.experiment + args.logFile, 'w')
 
 	if args.method == "endValueLoop":

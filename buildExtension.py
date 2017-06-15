@@ -78,7 +78,7 @@ def getName(dict_file, curr_map, info):
 
 # Return a list containing edges, ignoring duplicates
 # Also return the information of each edge
-def parseExtension(dict_file, base_model, ext_file):
+def parseExtension(dict_file, base_model, ext_file, filterThres):
 
 	ext_edges, ext_info, curr_map = set(), dict(), dict()
 	with open(ext_file) as f:
@@ -87,7 +87,7 @@ def parseExtension(dict_file, base_model, ext_file):
 			line = line.strip()
 			s = re.split(',',line)
 
-			# if int(s[15]) < 6: break  # Just for testing!!!
+			if int(s[15]) < filterThres: continue
 
 			name1, name2 = getName(dict_file,curr_map,s[0:7]), getName(dict_file,curr_map,s[7:14])
 			if name1=="" or name2=="": continue
@@ -115,6 +115,7 @@ def input_parsing():
 	parser.add_argument("-o","--outPath", help="output folder for current experiment", default="exp")
 	parser.add_argument("-d","--dictionary", help="name of the dictionary", default="dictionary.xlsx")
 	parser.add_argument("-me","--method", help="method to group extensions", choices=["markovCluster","readingCluster","topXReading"], default="markovCluster")
+	parser.add_argument("-fl","--filterThres", help="filter the extension using score as threshold", default=0, type=int)
 	additionalArg = parser.add_argument_group('additional argument for each method')
 	additionalArg.add_argument("--extOnly", help="(markov cluster) use extension only, default as false", action="store_true")
 	additionalArg.add_argument("--markovCoef", help="(markov/reading cluster) coefficient for markov clustering, default as 2", default=2, type=int)
@@ -148,7 +149,7 @@ def main():
 	grouped_file = args.dataPath + args.outPath + 'grouped_ext'
 
 	base_name, base_model = parseModel(bsl_mdl)
-	ext_edges, ext_info = parseExtension(dict_file, base_model, ext_file)
+	ext_edges, ext_info = parseExtension(dict_file, base_model, ext_file, args.filterThres)
 	
 
 	if args.method == "markovCluster":
@@ -167,8 +168,10 @@ def main():
 
 	elif args.method == "readingCluster":
 
-		res = runReadingCluster()
-
+		coef = args.markovCoef
+		res = runReadingCluster(args.dataPath+args.outPath,ext_info,coef)
+		print(res)
+		# pickle.dump(res, open(grouped_file,'wb'))
 
 if __name__=='__main__':
 	main()
